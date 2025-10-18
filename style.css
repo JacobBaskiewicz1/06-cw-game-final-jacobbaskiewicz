@@ -1,3 +1,22 @@
+/* Charity: water footer styles */
+footer {
+  background: #FFF7E1;
+  border-top: 3px solid #FFC907;
+  color: #003366;
+  font-size: 1.1em;
+  padding: 1.5em 0 1em 0;
+  margin-top: 2em;
+  text-align: center;
+}
+footer a {
+  color: #77A8BB;
+  font-weight: bold;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+footer a:hover {
+  color: #FFC907;
+}
 /* Center achievement text */
 .achievement {
   text-align: center;
@@ -48,7 +67,7 @@ Blue:      #77A8BB
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Avenir Book', Avenir, Arial, sans-serif;
   margin: 0;
   padding: 30px;
   background-color: #FFF7E1;

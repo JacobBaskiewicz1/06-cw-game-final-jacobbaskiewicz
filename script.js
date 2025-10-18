@@ -1,5 +1,5 @@
 // Game configuration and state variables
-const GOAL_CANS = 20;        // Total items needed to collect (match instructions)
+let GOAL_CANS = 20;        // Total items needed to collect (match instructions)
 let currentCans = 0;         // Current number of items collected
 let gameActive = false;      // Tracks if game is currently running
 let spawnInterval;           // Holds the interval for spawning items
@@ -43,6 +43,10 @@ function spawnWaterCan() {
     e.stopPropagation();
     if (!gameActive || can.classList.contains('clicked')) return;
 
+    // Play sound effect
+    const audio = new Audio('sound.wav');
+    audio.play();
+
     can.classList.add('clicked');
     currentCans++;
     updateScore();
@@ -72,7 +76,9 @@ function spawnWaterCan() {
 }
 
 // Initializes and starts a new game
-function startGame() {
+function startGame(goal) {
+  if (gameActive) return;
+  GOAL_CANS = goal;
   if (gameActive) return;
   gameActive = true;
   currentCans = 0;
@@ -88,7 +94,10 @@ function startGame() {
       endGame(false);
     }
   }, 1000);
-  document.getElementById('start-game').disabled = true;
+  // Disable all difficulty buttons
+  document.getElementById('easy-game').disabled = true;
+  document.getElementById('medium-game').disabled = true;
+  document.getElementById('hard-game').disabled = true;
   document.getElementById('achievements').textContent = '';
 }
 
@@ -96,13 +105,19 @@ function endGame(won) {
   gameActive = false;
   clearInterval(spawnInterval);
   clearInterval(timerInterval);
-  document.getElementById('start-game').disabled = false;
+  // Re-enable difficulty buttons for new game
+  document.getElementById('easy-game').disabled = false;
+  document.getElementById('medium-game').disabled = false;
+  document.getElementById('hard-game').disabled = false;
   // Show achievement message
   const achievement = document.getElementById('achievements');
   if (won) {
     achievement.textContent = '🎉 You collected all cans!';
     achievement.style.color = '#4FCB53';
-    showConfetti();
+    // Only show confetti if container exists
+    if (document.getElementById('confetti')) {
+      showConfetti();
+    }
   } else {
     achievement.textContent = '⏰ Time is up!';
     achievement.style.color = '#F5402C';
@@ -152,12 +167,17 @@ function updateTimer() {
 }
 
 // Set up click handler for the start button
-document.getElementById('start-game').addEventListener('click', startGame);
+document.getElementById('easy-game').addEventListener('click', () => startGame(10));
+document.getElementById('medium-game').addEventListener('click', () => startGame(20));
+document.getElementById('hard-game').addEventListener('click', () => startGame(30));
 
 // Reset game logic
 function resetGame() {
   gameActive = false;
   clearInterval(spawnInterval);
+  document.getElementById('easy-game').disabled = false;
+  document.getElementById('medium-game').disabled = false;
+  document.getElementById('hard-game').disabled = false;
   clearInterval(timerInterval);
   currentCans = 0;
   timeLeft = 30;
